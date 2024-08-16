@@ -43,13 +43,20 @@ async function run() {
       const search = req.query.search || '';
       const minPrice = parseFloat(req.query.minPrice) || 0;
       const maxPrice = parseFloat(req.query.maxPrice) || Number.MAX_VALUE;
-
+      const brands = req.query.brands ? req.query.brands.split(',') : [];
+      
+      // search by products name and filter by price 
       let query = {
         productName: { $regex: search, $options: 'i' },
-        price: { $gte: minPrice, $lte: maxPrice }
+        price: { $gte: minPrice, $lte: maxPrice },
       };
-      console.log(query);
-      
+
+
+      // If the client sets the brand, then filter by brandName from MongoDB
+      if (brands.length > 0) {
+        query.brandName = { $in: brands };
+      }
+
 
       const result = await productsCollection.find(query).toArray();
       res.send(result)
