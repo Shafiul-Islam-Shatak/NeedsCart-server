@@ -44,7 +44,9 @@ async function run() {
       const minPrice = parseFloat(req.query.minPrice) || 0;
       const maxPrice = parseFloat(req.query.maxPrice) || Number.MAX_VALUE;
       const brands = req.query.brands ? req.query.brands.split(',') : [];
-      
+      const categories = req.query.categories ? req.query.categories.split(',') : [];
+
+
       // search by products name and filter by price 
       let query = {
         productName: { $regex: search, $options: 'i' },
@@ -55,6 +57,12 @@ async function run() {
       // If the client sets the brand, then filter by brandName from MongoDB
       if (brands.length > 0) {
         query.brandName = { $in: brands };
+      }
+
+      // If the client sets the category, then filter by category from MongoDB
+
+      if (categories.length > 0) {
+        query.category = { $in: categories };
       }
 
 
