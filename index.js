@@ -38,13 +38,19 @@ async function run() {
 
     // get all products  api from db
     app.get('/all-products', async (req, res) => {
-      const search = req.query.search;
-      const allParams = req.query
-      console.log(allParams);
-      
+
+      // collecting data from params
+      const search = req.query.search || '';
+      const minPrice = parseFloat(req.query.minPrice) || 0;
+      const maxPrice = parseFloat(req.query.maxPrice) || Number.MAX_VALUE;
+
       let query = {
-        productName: { $regex: search, $options: 'i' }
-      }
+        productName: { $regex: search, $options: 'i' },
+        price: { $gte: minPrice, $lte: maxPrice }
+      };
+      console.log(query);
+      
+
       const result = await productsCollection.find(query).toArray();
       res.send(result)
     })
