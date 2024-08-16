@@ -46,9 +46,9 @@ async function run() {
       const brands = req.query.brands ? req.query.brands.split(',') : [];
       const categories = req.query.categories ? req.query.categories.split(',') : [];
       const sort = req.query.sort || '';
-      console.log(sort);
-      console.log(search);
-      
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+
 
 
       // search by products name and filter by price 
@@ -72,17 +72,24 @@ async function run() {
       // sort data
       let sortQuery = {};
       if (sort === 'low to high') {
-        sortQuery.price = 1; 
+        sortQuery.price = 1;
       } else if (sort === 'high to low') {
-        sortQuery.price = -1; 
+        sortQuery.price = -1;
       } else if (sort === 'newest') {
         sortQuery.createdAt = -1;
+      }
 
-      
+      // pagination
+      const skip = (page - 1) * limit;
+      const totalProducts = await productsCollection.countDocuments(query);
+      const totalPages = Math.ceil(totalProducts / limit);
 
-
-      const result = await productsCollection.find(query).sort(sortQuery).toArray();
-      res.send(result)
+      const products = await productsCollection.find(query).sort(sortQuery).skip(skip).limit(limit).toArray();
+      res.json({
+        products,
+        totalPages,
+        currentPage: page
+      })
     })
 
 
