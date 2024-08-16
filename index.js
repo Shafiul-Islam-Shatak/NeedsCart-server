@@ -36,17 +36,12 @@ async function run() {
     // await client.connect();
     const productsCollection = client.db('NeedsCart').collection('all_products')
 
-    // get all products
-    // app.get('/all-products', async (req, res) => {
-
-    //   const result = await productsCollection.find().toArray()
-    //   res.send(result)
-    // })
-
-
     // get all products  api from db
     app.get('/all-products', async (req, res) => {
       const search = req.query.search;
+      const allParams = req.query
+      console.log(allParams);
+      
       let query = {
         productName: { $regex: search, $options: 'i' }
       }
