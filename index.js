@@ -37,8 +37,20 @@ async function run() {
     const productsCollection = client.db('NeedsCart').collection('all_products')
 
     // get all products
-    app.get('/', async (req, res) => {
-      const result = await productsCollection.find().toArray()
+    // app.get('/all-products', async (req, res) => {
+
+    //   const result = await productsCollection.find().toArray()
+    //   res.send(result)
+    // })
+
+
+    // get all products  api from db
+    app.get('/all-products', async (req, res) => {
+      const search = req.query.search;
+      let query = {
+        productName: { $regex: search, $options: 'i' }
+      }
+      const result = await productsCollection.find(query).toArray();
       res.send(result)
     })
 
