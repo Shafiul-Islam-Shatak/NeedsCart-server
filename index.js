@@ -11,8 +11,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "needscart-30b9c.web.app",
-      "needscart-30b9c.firebaseapp.com"
+      "https://needscart-30b9c.web.app",
+      "needscart-30b9c.firebaseapp.com",
+      "https://66bf7804d9e6ac578273918c--celebrated-meringue-6be4a9.netlify.app"
     ]
   })
 );
