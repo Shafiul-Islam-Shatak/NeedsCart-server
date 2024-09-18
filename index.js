@@ -96,10 +96,16 @@ async function run() {
     })
 
 
-    app.get('all' , async(req,res)=>{
-      const products = await productsCollection.find().toArray()
-      res.json(products)
-    })
+    app.get('/all', async (req, res) => {
+      try {
+        const products = await productsCollection.find().toArray();
+        console.log(products);
+        res.json(products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
+    });
 
 
     // Send a ping to confirm a successful connection
